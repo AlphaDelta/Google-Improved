@@ -6,7 +6,7 @@
 // @include     http://google.*
 // @include     https://www.google.*
 // @include     https://google.*
-// @version     1.0.2
+// @version     1.0.3
 // @updateURL   https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.meta.js
 // @downloadURL https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.meta.js
 // @grant       none
