@@ -20,7 +20,7 @@
 // @include     https://encrypted.google.com/search*
 // @include     *://www.google.*/search*
 // @include     *://google.*/search*
-// @version     1.0.9
+// @version     1.0.10
 // @updateURL   https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.meta.js
 // @downloadURL https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.user.js
 // @grant       GM_getValue
@@ -88,9 +88,14 @@ function DoMod() {
     if(removenonsearch) {
       var inthenews = $(".mnr-c");
       if(inthenews.length > 0) {
-        inthenews.parent().prev().remove();
-        inthenews.parent().next().remove();
-        inthenews.parent().remove();
+        inthenews.each(function() {
+          var parent = $(inthenews.parent()[0]);
+          if(parent.is("div")) {
+            if(parent.prev().is("hr")) parent.prev().remove();
+            if(parent.next().is("hr")) parent.next().remove();
+            parent.remove();
+          } else inthenews.remove();
+        });
       }
     }
     
@@ -158,7 +163,7 @@ function ToggleSettings() {
 
 
 (function() {
-  console.log("%c Google Improved - 1.0.9 ", 'background: #166BEC; color: #f1f1f1');
+  console.log("%c Google Improved - 1.0.10 ", 'background: #166BEC; color: #f1f1f1');
   x = document.getElementById("main");
   
   if(x.addEventListener){

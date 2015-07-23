@@ -20,7 +20,7 @@
 // @include     https://encrypted.google.com/search*
 // @include     *://www.google.*/search*
 // @include     *://google.*/search*
-// @version     1.0.9
+// @version     1.0.10
 // @updateURL   https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.meta.js
 // @downloadURL https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.user.js
 // @grant       GM_getValue
