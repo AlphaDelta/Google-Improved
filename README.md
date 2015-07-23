@@ -1,6 +1,18 @@
 # Google-Improved
 Userscript to make Google bearable
 
+## Install
+
+#### Firefox
+
+1. Install [Greasemonkey](https://addons.mozilla.org/en-us/firefox/addon/greasemonkey/)
+2. Open and install [Google Improved] (https://github.com/AlphaDelta/Google-Improved/raw/master/google-improved.user.js)
+
+#### Google Chrome / Chromium
+
+1. Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+2. Open and install [Google Improved] (https://github.com/AlphaDelta/Google-Improved/raw/master/google-improved.user.js)
+
 ## Features
 
 * [Nukes the front page to a cleaner version](http://i.imgur.com/fgsWS8O.png)
