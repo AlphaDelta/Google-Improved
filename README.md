@@ -8,4 +8,4 @@ Userscript to make Google bearable
 * Prevents Google from click-jacking your link clicks to go through their gateway
 * Cleans search results of clutter
 
-All toggleable through the [settings](https://i.imgur.com/axXLIwy.png) (ctrl+shift+i)
+All toggleable through the [settings](https://i.imgur.com/axXLIwy.png) (ctrl+alt+i)
