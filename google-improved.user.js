@@ -2,12 +2,19 @@
 // @name        Google Improved
 // @namespace   Alfur
 // @description Makes Google bearable
-// @include     http://www.google.*
-// @include     http://google.*
-// @include     https://encrypted.google.com/*
-// @include     https://www.google.*
-// @include     https://google.*
-// @version     1.0.5
+// @include     https://encrypted.google.com/
+// @include     *://www.google.*/
+// @include     *://google.*/
+// @include     https://encrypted.google.com/webhp
+// @include     *://www.google.*/webhp
+// @include     *://google.*/webhp
+// @include     https://encrypted.google.com/imghp
+// @include     *://www.google.*/imghp
+// @include     *://google.*/imghp
+// @include     https://encrypted.google.com/search*
+// @include     *://www.google.*/search*
+// @include     *://google.*/search*
+// @version     1.0.6
 // @updateURL   https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.meta.js
 // @downloadURL https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.user.js
 // @grant       GM_getValue
@@ -144,7 +151,7 @@ function ToggleSettings() {
 }
 
 (function() {
-  console.log("%c Google Improved - 1.0.5 ", 'background: #166BEC; color: #f1f1f1');
+  console.log("%c Google Improved - 1.0.6 ", 'background: #166BEC; color: #f1f1f1');
   x = document.getElementById("main");
   
   if(x.addEventListener){
@@ -165,19 +172,17 @@ function ToggleSettings() {
     $("head").append("<style type=\"text/css\">#searchform.jhp { top: 45% !important; }</style>");
     
     var logo = $("#hplogo");
-    //if() {
-    if(true) {
-      logo.parent().css("padding-top", "").css("margin-top", "");
-      logo.parent().parent()
-      .css("height", "")
-      .css("position", "absolute")
-      .css("left", "50%")
-      .css("margin-left", "-134px")
-      .css("top", "45%")
-      .css("margin-top", (
-        window.location.toString().indexOf("https://encrypted.google.com") === 0 ||
-        window.location.toString().indexOf("webhp?hl=en") !== -1 ? "-220px" : "-115px"));
-    }
+    if(window.location.toString().indexOf("//www.google.com/") !== -1 || window.location.toString().indexOf("//google.com/") !== -1) logo.css("padding-top", "");
+    logo.parent().css("padding-top", "").css("margin-top", "");
+    logo.parent().parent()
+    .css("height", "")
+    .css("position", "absolute")
+    .css("left", "50%")
+    .css("margin-left", "-134px")
+    .css("top", "45%")
+    .css("margin-top", (
+      window.location.toString().indexOf("https://encrypted.google.com") === 0 ||
+      window.location.toString().indexOf("webhp?hl=en") !== -1 ? "-220px" : "-115px"));
     
     logo.children().first().text("Clean");
   }
