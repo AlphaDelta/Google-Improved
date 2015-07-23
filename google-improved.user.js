@@ -7,8 +7,7 @@
 // @include     https://encrypted.google.com/*
 // @include     https://www.google.*
 // @include     https://google.*
-// @include     http://localhost/gi-settings
-// @version     1.0.4
+// @version     1.0.5
 // @updateURL   https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.meta.js
 // @downloadURL https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.user.js
 // @grant       GM_getValue
@@ -27,8 +26,9 @@ var x;
 
 var del;
 
-var doneappbar = false, donenavbar = false, donesearchbar = false;
+var doneappbar = false, donenavbar = false, donesearchbar = false, hit = 0;
 function DoMod() {
+  hit++;
   if(cleansearch) {
     if(!doneappbar) {
       var appbar = $("#appbar");
@@ -144,7 +144,7 @@ function ToggleSettings() {
 }
 
 (function() {
-  console.log("Google Improved - 1.0.4");
+  console.log("%c Google Improved - 1.0.5 ", 'background: #166BEC; color: #f1f1f1');
   x = document.getElementById("main");
   
   if(x.addEventListener){
@@ -186,12 +186,16 @@ function ToggleSettings() {
   $("body").on("keydown", function(evt) {
     if(evt.which == 17) ctrl = true;
     else if(evt.which == 18) alt = true;
-    else if(ctrl && alt && evt.which == 73) {
-      ToggleSettings();
-    }
+    else if(ctrl && alt && evt.which == 73) ToggleSettings();
+    else if(ctrl && alt && evt.which == 68) {
+		console.log("%c Dumping debug data... ", 'background: #f1f1f1; color: #166BEC');
+		console.log("DoLines() hit " + hit + " times");
+		console.log("nuke=" + nuke + ";rownum=" + rownum + ";antigateway=" + antigateway + ";cleansearch=" + cleansearch + ";removenonsearch=" + removenonsearch);
+	}
   });
   $("body").on("keyup", function(evt) {
     if(evt.which == 17) ctrl = false;
     else if(evt.which == 18) alt = false;
   });
+  DoLines();
 })();

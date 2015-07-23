@@ -7,8 +7,7 @@
 // @include     https://encrypted.google.com/*
 // @include     https://www.google.*
 // @include     https://google.*
-// @include     http://localhost/gi-settings
-// @version     1.0.4
+// @version     1.0.5
 // @updateURL   https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.meta.js
 // @downloadURL https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.user.js
 // @grant       GM_getValue
