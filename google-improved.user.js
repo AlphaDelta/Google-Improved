@@ -5,6 +5,9 @@
 // @include     https://encrypted.google.com/?*
 // @include     *://www.google.*/?*
 // @include     *://google.*/?*
+// @include     https://encrypted.google.com/#*
+// @include     *://www.google.*/#*
+// @include     *://google.*/#*
 // @include     https://encrypted.google.com/
 // @include     *://www.google.*/
 // @include     *://google.*/
@@ -17,7 +20,7 @@
 // @include     https://encrypted.google.com/search*
 // @include     *://www.google.*/search*
 // @include     *://google.*/search*
-// @version     1.0.8
+// @version     1.0.9
 // @updateURL   https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.meta.js
 // @downloadURL https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.user.js
 // @grant       GM_getValue
@@ -155,7 +158,7 @@ function ToggleSettings() {
 
 
 (function() {
-  console.log("%c Google Improved - 1.0.8 ", 'background: #166BEC; color: #f1f1f1');
+  console.log("%c Google Improved - 1.0.9 ", 'background: #166BEC; color: #f1f1f1');
   x = document.getElementById("main");
   
   if(x.addEventListener){
