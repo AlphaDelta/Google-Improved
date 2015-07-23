@@ -4,37 +4,88 @@
 // @description Makes Google bearable
 // @include     http://www.google.*
 // @include     http://google.*
+// @include     https://encrypted.google.com/*
 // @include     https://www.google.*
 // @include     https://google.*
-// @version     1.0.3
+// @include     http://localhost/gi-settings
+// @version     1.0.4
 // @updateURL   https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.meta.js
 // @downloadURL https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/google-improved.user.js
-// @grant       none
+// @grant       GM_getValue
+// @grant       GM_setValue
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @icon        https://raw.githubusercontent.com/AlphaDelta/Google-Improved/master/icon.png
 // ==/UserScript==
 
-/* ## Start of Switchboard ## */
-
-
-/* Nuke - Nuke the front page to a more minimal interface, no bullshit fogging up your screen. */
-var nuke = true;
-
-/* Row numbers - Adds row numbers to search results */
-var rownum = true;
-
-/* Anti-gateway - Prevents Google from jacking your link clicks and forcing them to go through their redirect gateway */
-var antigateway = true;
-
-
-/* ## End of Switchboard ## */
+var nuke = GM_getValue("nuke", true);
+var rownum = GM_getValue("rownum", true);
+var antigateway = GM_getValue("antigateway", true);
+var cleansearch = GM_getValue("cleansearch", true);
+var removenonsearch = GM_getValue("removenonsearch", true);
 
 var x;
 
 var del;
 
+var doneappbar = false, donenavbar = false, donesearchbar = false;
 function DoMod() {
-  $('#rso .srg li.g:not(.gi-parsed), #rso > li.g:not(.gi-parsed)').each(function (index) {
+  if(cleansearch) {
+    if(!doneappbar) {
+      var appbar = $("#appbar");
+      if(appbar.length > 0) {
+        appbar.after("<br />");
+        appbar.remove();
+        doneappbar = true;
+      }
+    }
+    if(!donenavbar) {
+      var navbar = $("#hdtb-msb");
+      if(navbar.length > 0) {
+        var imagesi = false, webi = null;
+        $(".hdtb-mitem", navbar).each(function() {
+          var item = $(this);
+          if(item.text() === "Web") webi = item;
+          else if(item.text() === "Images") imagesi = true;
+          else item.remove();
+        });
+        $("#hdtb-tls", navbar).remove();
+        if(!imagesi && webi.length > 0) {
+          $("#hdtb-more-mn .hdtb-mitem").each(function() {
+            var item = $(this);
+            if(item.text() === "Images") {
+              webi.after(item[0].outerHTML);
+              return false;
+            }
+          });
+        }
+        $("#hdtb-more", navbar).remove();
+        //donenavbar = true;
+      }
+    }
+    
+    /*if(!donesearchbar) {
+      var searchbar = $("#sfdiv");
+      if(searchbar.length > 0) {
+        $(".sfsbc").remove();
+        searchbar.css("border-right-width", "1px").css("border-right-color", "inherit");
+        donesearchbar = true;
+      }
+    }*/
+    
+    if(removenonsearch) {
+      var inthenews = $(".mnr-c");
+      if(inthenews.length > 0) {
+        inthenews.parent().prev().remove();
+        inthenews.parent().next().remove();
+        inthenews.parent().remove();
+      }
+    }
+    
+    $("#footcnt").remove();
+    $("#extrares").remove();
+  }
+  
+  $('#rso .srg .g:not(.gi-parsed), #rso > .g:not(.gi-parsed)').each(function (index) {
     var t = $(this);
     t.addClass('gi-parsed');
     t.css('position', 'relative');
@@ -49,8 +100,51 @@ function DoLines() {
   del = setTimeout(DoMod, 200);
 }
 
+var settings = false;
+var viewport = null;
+function ToggleSettings() {
+  settings = !settings;
+  
+  if(viewport === null) viewport = $("#viewport");
+  
+  if(settings) {
+    $("body").prepend("\
+<div id=\"gi-settings\" style=\"position: fixed; margin: 5px; padding: 5px; background: #F2F2F2; border: 1px solid #888; font-size: 11px; color: #222; z-index: 1000;\">\
+<input id=\"gi-nuke\" type=\"checkbox\" " + (nuke ? "checked" : "") + "/><label for=\"gi-nuke\">Nuke <span style=\"color: #888;\">(Nuke the front page to a more minimal interface, no bullshit fogging up your screen)</span></label>\
+  <br /><input id=\"gi-rownum\" type=\"checkbox\" " + (rownum ? "checked" : "") + "/><label for=\"gi-rownum\">Row numbers <span style=\"color: #888;\">(Adds row numbers to search results)</span></label>\
+  <br /><input id=\"gi-antigateway\" type=\"checkbox\" " + (antigateway ? "checked" : "") + "/><label for=\"gi-antigateway\">Anti-gateway <span style=\"color: #888;\">(Prevents Google from jacking your link clicks and forcing them to go through their redirect gateway)</span></label>\
+  <br /><input id=\"gi-cleansearch\" type=\"checkbox\" " + (cleansearch ? "checked" : "") + "/><label for=\"gi-cleansearch\">Clean search <span style=\"color: #888;\">(Removes clutter from the search page)</span></label>\
+  <br /><input id=\"gi-removenonsearch\" type=\"checkbox\" style=\"margin-left: 25px;\" " + (removenonsearch ? "checked" : "") + (cleansearch ? "" : " disabled=\"disabled\"") + "/><label for=\"gi-removenonsearch\">Remove non-search items <span style=\"color: #888;\">(Removes non-search items such as 'In the news')</span></label>\
+  <br /><div style=\"margin-top: 5px; font-style: italic; color: #555;\">Page must be refreshed in order for new settings to take effect</div>\
+</div>");
+    $("#gi-nuke").change(function() { nuke = this.checked; GM_setValue("nuke", this.checked); });
+    $("#gi-rownum").change(function() { rownum = this.checked; GM_setValue("rownum", this.checked); });
+    $("#gi-antigateway").change(function() { antigateway = this.checked; GM_setValue("antigateway", this.checked); });
+    $("#gi-cleansearch").change(function() {
+      cleansearch = this.checked;
+      GM_setValue("cleansearch", this.checked);
+      if(!this.checked)
+        $("#gi-removenonsearch").attr("disabled", "disabled");
+      else
+        $("#gi-removenonsearch").removeAttr("disabled");
+    });
+    $("#gi-removenonsearch").change(function() { removenonsearch = this.checked; GM_setValue("removenonsearch", this.checked); });
+    
+    viewport.mousedown(function() { ToggleSettings(); });
+  } else {
+    $("#gi-nuke").unbind();
+    $("#gi-rownum").unbind();
+    $("#gi-antigateway").unbind();
+    $("#gi-cleansearch").unbind();
+    $("#gi-removenonsearch").unbind();
+    viewport.unbind();
+    
+    $("#gi-settings").remove();
+  }
+}
+
 (function() {
-  console.log("Google Improved - 1.0.3");
+  console.log("Google Improved - 1.0.4");
   x = document.getElementById("main");
   
   if(x.addEventListener){
@@ -71,15 +165,33 @@ function DoLines() {
     $("head").append("<style type=\"text/css\">#searchform.jhp { top: 45% !important; }</style>");
     
     var logo = $("#hplogo");
-    logo.parent().css("padding-top", "");
-    logo.parent().parent()
-    .css("height", "")
-    .css("position", "absolute")
-    .css("left", "50%")
-    .css("margin-left", "-134px")
-    .css("top", "45%")
-    .css("margin-top", "-115px");
+    //if() {
+    if(true) {
+      logo.parent().css("padding-top", "").css("margin-top", "");
+      logo.parent().parent()
+      .css("height", "")
+      .css("position", "absolute")
+      .css("left", "50%")
+      .css("margin-left", "-134px")
+      .css("top", "45%")
+      .css("margin-top", (
+        window.location.toString().indexOf("https://encrypted.google.com") === 0 ||
+        window.location.toString().indexOf("webhp?hl=en") !== -1 ? "-220px" : "-115px"));
+    }
     
     logo.children().first().text("Clean");
   }
+  
+  var ctrl = false, alt = false;
+  $("body").on("keydown", function(evt) {
+    if(evt.which == 17) ctrl = true;
+    else if(evt.which == 18) alt = true;
+    else if(ctrl && alt && evt.which == 73) {
+      ToggleSettings();
+    }
+  });
+  $("body").on("keyup", function(evt) {
+    if(evt.which == 17) ctrl = false;
+    else if(evt.which == 18) alt = false;
+  });
 })();
